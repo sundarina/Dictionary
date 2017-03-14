@@ -21,16 +21,19 @@ public class DictionaryDAO {
         ResultSet rs = null;
         Connection con = getConnectionFrom();
         con.setAutoCommit(false);
-        PreparedStatement ps = con.prepareStatement("Select word, value From dictionary.en-ru");
-        WordEn en = new WordEn();
-        WordRu ru = new WordRu();
+        PreparedStatement ps = con.prepareStatement("Select word, value From en-ru");
+
         try {
             rs = ps.executeQuery();
             con.commit();
             while (rs.next()) {
+                WordEn en = new WordEn();
+                WordRu ru = new WordRu();
                 en.setWordEn(rs.getString(2));
                 ru.setWordRu(rs.getString(3));
+                System.out.println("yyyy");
                 word.put(en, ru);
+                System.out.println("iiii");
             }
         } catch (SQLException e) {
             System.err.println("SQLState: " + e.getSQLState()

@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="DictionaryGUI">
-  <grid id="27dc6" binding="panel1" layout-manager="GridLayoutManager" row-count="10" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="panel1" layout-manager="GridLayoutManager" row-count="9" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="256" width="710" height="389"/>
+      <xy x="20" y="290" width="730" height="408"/>
     </constraints>
     <properties/>
-    <border type="none"/>
+    <border type="none">
+      <font/>
+    </border>
     <children>
-      <grid id="fa2f2" binding="panel2" layout-manager="BorderLayout" hgap="0" vgap="0">
+      <grid id="fa2f2" binding="panel2" layout-manager="BorderLayout" hgap="200" vgap="0">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -19,21 +21,25 @@
             <constraints border-constraint="West"/>
             <properties>
               <name value=""/>
-              <text value="                       ENGLISH                       "/>
+              <text value=" ENGLISH "/>
             </properties>
           </component>
           <component id="f5254" class="javax.swing.JLabel" binding="ruLabel">
             <constraints border-constraint="East"/>
             <properties>
               <name value=""/>
-              <text value="                      RUSSIAN                       "/>
+              <text value="RUSSIAN"/>
             </properties>
           </component>
-          <component id="b53bf" class="javax.swing.JButton" binding="icon">
+          <component id="b53bf" class="javax.swing.JButton" binding="changeButton">
             <constraints border-constraint="Center"/>
             <properties>
+              <enabled value="true"/>
+              <hideActionText value="false"/>
               <icon value="1f501.png"/>
               <text value=""/>
+              <verticalAlignment value="0"/>
+              <verticalTextPosition value="0"/>
             </properties>
           </component>
         </children>
@@ -69,20 +75,9 @@
           </component>
         </children>
       </grid>
-      <grid id="b90ca" binding="panel4" layout-manager="BorderLayout" hgap="0" vgap="0">
-        <constraints>
-          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="2" fill="0" indent="0" use-parent-layout="true"/>
-        </constraints>
-        <properties>
-          <focusTraversalPolicyProvider value="false"/>
-          <focusable value="true"/>
-        </properties>
-        <border type="none"/>
-        <children/>
-      </grid>
       <component id="2ca1f" class="javax.swing.JButton" binding="translateButton">
         <constraints>
-          <grid row="5" column="1" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="1" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Перевести"/>
@@ -90,18 +85,36 @@
       </component>
       <hspacer id="d037d">
         <constraints>
-          <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
       </hspacer>
       <component id="b8fe6" class="javax.swing.JLabel">
         <constraints>
-          <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="**************************************************************************************************"/>
           <verticalAlignment value="1"/>
         </properties>
       </component>
+      <grid id="fe81a" binding="panel5" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="9bfe9" class="javax.swing.JButton" binding="cleanButton">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Очистить все поля"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
 </form>
