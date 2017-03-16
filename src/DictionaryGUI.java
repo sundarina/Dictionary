@@ -1,14 +1,17 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Map;
-import java.util.TreeMap;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.sql.Connection;
+import java.util.*;
 
 /**
  * Created by sun on 14.03.17.
  */
 public class DictionaryGUI {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         JFrame frame = new JFrame("Dictionary");
         frame.setContentPane(new DictionaryGUI().panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -20,7 +23,7 @@ public class DictionaryGUI {
 
     }
 
-    DictionaryDAO dao = new DictionaryDAO();
+    // DictionaryDAO dao = new DictionaryDAO();
 
     private JButton changeButton;
     private JTextArea textArea1;
@@ -33,65 +36,93 @@ public class DictionaryGUI {
     private JButton translateButton;
     private JPanel panel5;
     private JButton cleanButton;
+    private Map<String, ArrayList> fregMap;
 
 
-    public DictionaryGUI() {
+    public DictionaryGUI() throws Exception {
 
-       translateButton.addActionListener(new ActionListener() {
+
+        //fregMap = Dict.getDictionary(Dict.Lang.Eng, Dict.Lang.Rus);
+        // for (String item : fregMap.keySet()) { //извлечение множества ключей
+
+
+        translateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(textArea1 != null){
-                    if(enLabel.getText().equals("ENGLISH")) {
-                        showWordEn();
+                if (textArea1 != null) {
+                    if (enLabel.getText().equals("ENGLISH")) {
+                        try {
+                            fregMap = Dict.getDictionary(Dict.Lang.Eng, Dict.Lang.Rus);
+                            showWord();
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+
                     } else if (ruLabel.getText().equals("RUSSIAN"))
-                        showWordRu();
+                        try {
+                            fregMap = Dict.getDictionary(Dict.Lang.Rus, Dict.Lang.Eng);
+                            showWord();
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+
                 }
 
-               // JOptionPane.showMessageDialog(null, "Hello!");
+                // JOptionPane.showMessageDialog(null, "Hello!");
             }
         });
 
         cleanButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(textArea1 !=null && textArea2 !=null)
-                cleanButton();
+                if (textArea1 != null && textArea2 != null)
+                    cleanButton();
             }
         });
 
         changeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               changeLanguage();
+                changeLanguage();
             }
         });
     }
 
-    protected void showWordEn() {
+    protected void showWord() {
+        StringBuffer stringBuffer = null;
         try {
-            TreeMap<WordEn, WordRu> word = dao.getWordEnRu();
-            for(Map.Entry<WordEn, WordRu> item : word.entrySet()){
-                if (item.getKey().getWordEn().equals(textArea1.getText()));
-                StringBuffer stringBuffer = new StringBuffer(item.getValue().getWordRu() + "\n");
-                textArea2.setText(String.valueOf(stringBuffer));
+            // TreeMap<String, ArrayList> word = (TreeMap<String, ArrayList>) fregMap;
+
+
+//TODO java.lang.ClassCastException: java.util.ArrayList cannot be cast to java.lang.Comparable
+//            for (Object item : fregMap.values()) { //множество значений
+//                ArrayList valuesWord = fregMap.get(item);
+//                for (Object value : valuesWord) {
+//                    textArea2.setText(value.toString() + "\n");
+//                }
+//            }
+
+            for(Map.Entry entry: fregMap.entrySet()) { { //множество значений
+                ArrayList valuesWord = fregMap.get(entry.getValue());
+                for (Object value : valuesWord) {
+                    textArea2.setText(value.toString() + "\n");
+                }
             }
+
+
+
+          //      V value = entry.getValue();
+            }
+
+//            for (Map.Entry<String, String> entry : map.entrySet()) {
+//                System.out.println("ID =  " + entry.getKey() + " День недели = " + entry.getValue());
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    protected void showWordRu() {
-        try {
-            TreeMap<WordEn, WordRu> word = dao.getWordEnRu();
-            for(Map.Entry<WordEn, WordRu> item : word.entrySet()){
-                if (item.getValue().getWordRu().equals(textArea1.getText()));
-                StringBuffer stringBuffer = new StringBuffer(item.getKey().getWordEn() + "\n");
-                textArea2.setText(String.valueOf(stringBuffer));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 
     protected void cleanButton() {
         try {
@@ -102,8 +133,8 @@ public class DictionaryGUI {
         }
     }
 
-    protected void changeLanguage(){
-        if (enLabel.getText().equals("ENGLISH")){
+    protected void changeLanguage() {
+        if (enLabel.getText().equals("ENGLISH")) {
             enLabel.setText("RUSSIAN");
             ruLabel.setText("ENGLISH");
         } else {//if (enLabel.getText().equals("RUSSIAN")){
