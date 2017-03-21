@@ -26,21 +26,22 @@ class Dict {
         }
     }
 
-    //считывания с file.txt и создание мапы
     static Map<String, ArrayList> getDictionary(Lang K, Lang V) throws Exception {
         DictionaryDAO dao = new DictionaryDAO();
         Map<String, ArrayList> fregMap = new TreeMap<>();
-        String[] words = dao.getWordEnRu();
-        for (int i = 0; i < words.length; i++) {
-            System.out.print(words[i] + " ");
+        Map<String, ArrayList> words = dao.getWordEnRu();
+      //  System.out.println("step 2" + words);
+        for (Map.Entry<String, ArrayList> item : words.entrySet()) {
+            String[] str = new String[2];
+            str[0] = item.getKey();
+            //как сделать так, чтобы потом каждое слово из ArrayList было вставлено как value
+            str[1] = String.valueOf(item.getValue()); //ошибка
+            ArrayList value = words.get(str[K.getN()]);
+            if (value == null) value = new ArrayList();
+            value.add(str[V.getN()]);
+            fregMap.put(str[K.getN()], value);
         }
-        //TODO  java.lang.NullPointerException
-        ArrayList value = fregMap.get(words[K.getN()]); //англо русский 1
-        if (value == null) {
-            value = new ArrayList();
-            value.add(words[V.getN()]);
-        }
-        fregMap.put(words[K.getN()], value); //англ-русский 1 можно сделать классом, и добавить метод подстановки 0 и 1
+       // System.out.println("step 3" + fregMap);
         return fregMap;
     }
 }
@@ -57,37 +58,38 @@ public class DictionaryDAO {
     }
 
 
-    public String[] getWordEnRu() throws Exception {
-        ResultSet rs = null;
-        Connection con = getConnectionFrom();
-        con.setAutoCommit(false);
-        PreparedStatement ps = con.prepareStatement("Select word, value From dictionary.enRu");
-        String[] words = new String[2];
-        try {
-            rs = ps.executeQuery();
-            con.commit();
-            while (rs.next()) {
-
-                words[0] = rs.getString(1);
-                words[1] = rs.getString(2);
-            }
-        } catch (SQLException e) {
-            System.err.println("SQLState: " + e.getSQLState()
-                    + "Error Message: " + e.getMessage());
-            con.rollback();
-        } finally {
-            // rs.close();
-            con.close();
-        }
-        return words;
-    }
+//    public String[] getWordEnRu() throws Exception {
+//        ResultSet rs = null;
+//        Connection con = getConnectionFrom();
+//        con.setAutoCommit(false);
+//        PreparedStatement ps = con.prepareStatement("Select word, value From dictionary.enRu");
+//        String[] words = new String[2];
+//        //cписок пар формирование словаря в фрегмап
+//        try {
+//            rs = ps.executeQuery();
+//            con.commit();
+//            while (rs.next()) {
+//                words[0] = rs.getString(1);
+//                words[1] = rs.getString(2);
+//                System.out.println(words[0] + " " + words[1]);
+//            }
+//        } catch (SQLException e) {
+//            System.err.println("SQLState: " + e.getSQLState()
+//                    + "Error Message: " + e.getMessage());
+//            con.rollback();
+//        } finally {
+//            // rs.close();
+//            con.close();
+//        }
+//        return words;
+//    }
 
 //    public String getWord() throws Exception {
 //
 //        ResultSet rs = null;
 //        Connection con = getConnectionFrom();
 //        con.setAutoCommit(false);
-//        PreparedStatement ps = con.prepareStatement("Select word, value From en-ru");
+//        PreparedStatement ps = con.prepareStatement("Select word, value From enRu");
 //        String word = "";
 //        try {
 //            rs = ps.executeQuery();
@@ -108,36 +110,39 @@ public class DictionaryDAO {
 //    }
 
 
-//    public TreeMap<WordEn, WordRu> getWordEnRu() throws Exception {
-//        TreeMap<WordEn, WordRu> word = new TreeMap<>();
-//        ResultSet rs = null;
-//        Connection con = getConnectionFrom();
-//        con.setAutoCommit(false);
-//        PreparedStatement ps = con.prepareStatement("Select word, value From en-ru");
-//
-//        try {
-//            rs = ps.executeQuery();
-//            con.commit();
-//            while (rs.next()) {
-//                WordEn en = new WordEn();
-//                WordRu ru = new WordRu();
-//                en.setWordEn(rs.getString(2));
-//                ru.setWordRu(rs.getString(3));
-//                System.out.println("yyyy");
-//                word.put(en, ru);
-//                System.out.println("iiii");
-//            }
-//        } catch (SQLException e) {
-//            System.err.println("SQLState: " + e.getSQLState()
-//
-//                    + "Error Message: " + e.getMessage());
-//            con.rollback();
-//        } finally {
+    public TreeMap<String, ArrayList> getWordEnRu() throws Exception {
+        TreeMap<String, ArrayList> word = new TreeMap<>();
+        ResultSet rs = null;
+        Connection con = getConnectionFrom();
+        con.setAutoCommit(false);
+        PreparedStatement ps = con.prepareStatement("Select word, value From enRu");
+
+        try {
+            rs = ps.executeQuery();
+            con.commit();
+            while (rs.next()) {
+                WordClass wordClass = new WordClass();
+                wordClass.setKeyWord(rs.getString(1));
+                wordClass.setValueWord(rs.getString(2));
+                ArrayList value = word.get(wordClass.getKeyWord()); //англо русский 1
+                if (value == null) value = new ArrayList();
+               // System.out.println(wordClass.getValueWord());
+                value.add(wordClass.getValueWord());
+                word.put(wordClass.getKeyWord(), value);
+            }
+        } catch (SQLException e) {
+            System.err.println("SQLState: " + e.getSQLState()
+
+                    + "Error Message: " + e.getMessage());
+            con.rollback();
+        } finally {
 //            rs.close();
-//            con.close();
-//        }
-//        return word;
-//    }
+            con.close();
+        }
+        System.out.println("step 1" + word);
+        System.out.println(word.get("list"));
+        return word;
+    }
 
 
 }

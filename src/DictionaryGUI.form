@@ -21,7 +21,7 @@
             <constraints border-constraint="West"/>
             <properties>
               <name value=""/>
-              <text value=" ENGLISH "/>
+              <text value="ENGLISH"/>
             </properties>
           </component>
           <component id="f5254" class="javax.swing.JLabel" binding="ruLabel">

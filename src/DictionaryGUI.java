@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.sql.Connection;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by sun on 14.03.17.
@@ -36,15 +38,11 @@ public class DictionaryGUI {
     private JButton translateButton;
     private JPanel panel5;
     private JButton cleanButton;
-    private Map<String, ArrayList> fregMap;
-
+    Map<String, ArrayList> fregMap;
 
     public DictionaryGUI() throws Exception {
 
-
-        //fregMap = Dict.getDictionary(Dict.Lang.Eng, Dict.Lang.Rus);
         // for (String item : fregMap.keySet()) { //извлечение множества ключей
-
 
         translateButton.addActionListener(new ActionListener() {
             @Override
@@ -53,15 +51,27 @@ public class DictionaryGUI {
                     if (enLabel.getText().equals("ENGLISH")) {
                         try {
                             fregMap = Dict.getDictionary(Dict.Lang.Eng, Dict.Lang.Rus);
-                            showWord();
+                            ArrayList valuesWord = null;
+                            valuesWord = fregMap.get(textArea1.getText());
+
+                            for (Object value : valuesWord) {
+                                textArea2.setText(value.toString());
+                               //    textArea2.setText(findRegEx(value.toString()));
+                            }
+
                         } catch (Exception e1) {
                             e1.printStackTrace();
                         }
 
-                    } else if (ruLabel.getText().equals("RUSSIAN"))
+                    } else if (enLabel.getText().equals("RUSSIAN"))
                         try {
                             fregMap = Dict.getDictionary(Dict.Lang.Rus, Dict.Lang.Eng);
-                            showWord();
+                            ArrayList valuesWord = null;
+                            valuesWord = fregMap.get("[" + textArea1.getText() + "]");
+
+                            for (Object value : valuesWord) {
+                                textArea2.setText(value + "");
+                            }
                         } catch (Exception e1) {
                             e1.printStackTrace();
                         }
@@ -88,40 +98,19 @@ public class DictionaryGUI {
         });
     }
 
-    protected void showWord() {
-        StringBuffer stringBuffer = null;
-        try {
-            // TreeMap<String, ArrayList> word = (TreeMap<String, ArrayList>) fregMap;
-
-
-//TODO java.lang.ClassCastException: java.util.ArrayList cannot be cast to java.lang.Comparable
-//            for (Object item : fregMap.values()) { //множество значений
-//                ArrayList valuesWord = fregMap.get(item);
-//                for (Object value : valuesWord) {
-//                    textArea2.setText(value.toString() + "\n");
-//                }
-//            }
-
-            for(Map.Entry entry: fregMap.entrySet()) { { //множество значений
-                ArrayList valuesWord = fregMap.get(entry.getValue());
-                for (Object value : valuesWord) {
-                    textArea2.setText(value.toString() + "\n");
-                }
-            }
 
 
 
-          //      V value = entry.getValue();
-            }
-
-//            for (Map.Entry<String, String> entry : map.entrySet()) {
-//                System.out.println("ID =  " + entry.getKey() + " День недели = " + entry.getValue());
-//            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    private static String findRegEx(String userNameString) {
+        String s = null;
+        Pattern p = Pattern.compile("\\w"); //ничего не возвращает
+      //  Pattern p = Pattern.compile("[^\\[\\]]"); //только посдеднюю букву
+        Matcher m = p.matcher(userNameString);
+        while (m.find()) {
+            s = userNameString.substring(m.start(), m.end());
         }
+        return s;
     }
-
 
 
     protected void cleanButton() {
@@ -137,7 +126,7 @@ public class DictionaryGUI {
         if (enLabel.getText().equals("ENGLISH")) {
             enLabel.setText("RUSSIAN");
             ruLabel.setText("ENGLISH");
-        } else {//if (enLabel.getText().equals("RUSSIAN")){
+        } else { //if (enLabel.getText().equals("RUSSIAN")){
             enLabel.setText("ENGLISH");
             ruLabel.setText("RUSSIAN");
         }
